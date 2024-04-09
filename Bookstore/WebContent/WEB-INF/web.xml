@@ -21,12 +21,12 @@
 	</context-param>
 
 	<servlet>
-		<servlet-name>ControllerServlet</servlet-name>
-		<servlet-class>net.codejava.javaee.bookstore.ControllerServlet</servlet-class>
+		<servlet-name>BookController</servlet-name>
+		<servlet-class>com.bookstore.controller.BookController</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>ControllerServlet</servlet-name>
+		<servlet-name>BookController</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
 

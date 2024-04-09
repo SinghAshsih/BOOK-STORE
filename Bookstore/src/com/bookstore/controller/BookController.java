@@ -1,4 +1,4 @@
-package net.codejava.javaee.bookstore;
+package com.bookstore.controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -10,22 +10,50 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.bookstore.DAO.BookDAOImpl;
+import com.bookstore.modal.Book;
+import com.bookstore.service.BookService;
+import com.bookstore.service.BookServiceImpl;
+
 /**
- * ControllerServlet.java
- * This servlet acts as a page controller for the application, handling all
- * requests from the user.
+ * ControllerServlet.java This servlet acts as a page controller for the
+ * application, handling all requests from the user.
+ * 
+ * @author www.codejava.net package com.book.controller;
+ * 
+ *         import java.io.IOException; import java.sql.SQLException; import
+ *         java.util.List;
+ * 
+ *         import javax.servlet.RequestDispatcher; import
+ *         javax.servlet.ServletException; import
+ *         javax.servlet.http.HttpServlet; import
+ *         javax.servlet.http.HttpServletRequest; import
+ *         javax.servlet.http.HttpServletResponse;
+ * 
+ *         import com.bookstore.Dao.BookDAOImpl; import
+ *         com.bookstore.service.BookService; import
+ *         com.bookstore.service.BookServiceImpl; import com.model.Book;
+ * 
+ *         /** ControllerServlet.java This servlet acts as a page controller for
+ *         the application, handling all requests from the user.
  * @author www.codejava.net
  */
-public class ControllerServlet extends HttpServlet {
+public class BookController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private BookDAO bookDAO;
+	private BookDAOImpl bookDAO;
+	//
+	private BookService bookService;
 
 	public void init() {
 		String jdbcURL = getServletContext().getInitParameter("jdbcURL");
 		String jdbcUsername = getServletContext().getInitParameter("jdbcUsername");
 		String jdbcPassword = getServletContext().getInitParameter("jdbcPassword");
 
-		bookDAO = new BookDAO(jdbcURL, jdbcUsername, jdbcPassword);
+		bookDAO = new BookDAOImpl(); // parent class se child class ka object bana hai
+
+		// create object
+
+		bookService = new BookServiceImpl(jdbcURL, jdbcUsername, jdbcPassword);
 
 	}
 
@@ -88,19 +116,21 @@ public class ControllerServlet extends HttpServlet {
 
 	}
 
-	private void insertBook(HttpServletRequest request, HttpServletResponse response) 
-			throws SQLException, IOException {
+	private void insertBook(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
 		String title = request.getParameter("title");
 		String author = request.getParameter("author");
 		float price = Float.parseFloat(request.getParameter("price"));
 
 		Book newBook = new Book(title, author, price);
-		bookDAO.insertBook(newBook);
+		//
+		bookService.insertBook(newBook);
+
+		// bookDAO.insertBook(newBook);
 		response.sendRedirect("list");
+
 	}
 
-	private void updateBook(HttpServletRequest request, HttpServletResponse response) 
-			throws SQLException, IOException {
+	private void updateBook(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
 		int id = Integer.parseInt(request.getParameter("id"));
 		String title = request.getParameter("title");
 		String author = request.getParameter("author");
@@ -111,8 +141,7 @@ public class ControllerServlet extends HttpServlet {
 		response.sendRedirect("list");
 	}
 
-	private void deleteBook(HttpServletRequest request, HttpServletResponse response) 
-			throws SQLException, IOException {
+	private void deleteBook(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
 		int id = Integer.parseInt(request.getParameter("id"));
 
 		Book book = new Book(id);
